@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users</title>
+<style>
+    /* Общие стили */
+    body {
+        background-color: #222;
+        color: #eee;
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        color: #fff;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5em;
+    }
+
+    input[type="text"], input[type="number"] {
+        padding: 0.5em;
+        border: none;
+        background-color: #333;
+        color: #eee;
+        margin-bottom: 1em;
+    }
+
+    button[type="submit"], input[type="button"] {
+        background-color: #333;
+        border: none;
+        padding: 0.5em 1em;
+        color: #eee;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover, input[type="button"]:hover {
+        background-color: #444;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 1em;
+    }
+
+    th, td {
+        padding: 0.5em;
+        border: 1px solid #666;
+    }
+
+    input[type="button"] {
+        margin-left: auto;
+        display: block;
+    }
+
+    .update-button, .delete-button {
+        background-color: #333;
+        border: none;
+        padding: 0.5em 1em;
+        color: #eee;
+        cursor: pointer;
+        width: 120px; /* фиксированный размер кнопок */
+    }
+
+    .update-button:hover, .delete-button:hover {
+        background-color: #444;
+    }
+</style>
+
+
+    <a href="/logout">Logout</a>
+</head>
+<body>
+<h1>Все пользователи</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Департамент</th>
+        <th>З/П</th>
+        <th>Операции</th>
+    </tr>
+    </thead>
+    <tbody>
+<!--    method="get"-->
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.surname}"></td>
+        <td th:text="${user.department}"></td>
+        <td th:text="${user.salary}"></td>
+        <td>
+            <form th:method="PATCH" th:action="@{/admin/updateInfo}" th:url="updateButton">
+                <input type="hidden" name="userId" th:value="${user.id}"/>
+                <input type="submit" class="update-button" value="Изменить" onclick="window.location.href = '${updateButton}'"/>
+            </form>
+            <br>
+            <form  th:method="DELETE" th:action="@{/admin/deleteUser}" th:url="deleteButton">
+                <input type="hidden" name="userId" th:value="${user.id}"/>
+                <input type="submit" class="delete-button" value="Удалить" onclick="window.location.href = '${deleteButton}'"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<input type="button" value="Добавить"
+       onclick="window.location.href = '/admin/addNewUser'"/>
+</body>
+</html>
