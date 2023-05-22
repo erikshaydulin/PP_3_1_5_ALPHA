@@ -9,8 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+
 
 
 @Entity
@@ -58,6 +57,12 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.roles = (Collection<Role>) authorities;
     }
 
     public String getUsername() {
