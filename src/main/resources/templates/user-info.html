@@ -73,6 +73,12 @@
     <label for="salary">З/П:</label>
     <input type="number" id="salary" th:field="*{salary}" required/>
     <div style="color:red" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}">Name Error</div>
+    <label for="username">Логин:</label>
+    <input type="text" id="username" th:field="*{username}" required/>
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" th:field="*{password}" required/>
+
+
     <button type="submit">Добавить</button>
 </form>
 </body>
