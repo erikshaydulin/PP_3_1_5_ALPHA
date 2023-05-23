@@ -46,12 +46,22 @@ public class MyController {
         return "redirect:/admin";
     }
     @PatchMapping("/updateInfo")
-    public String updateUser(@RequestParam("userId") Long id, Model model) {
+    public String updateInfo(@RequestParam("userId") Long id, Model model) {
 
         User user = userService.getUser(id);
         model.addAttribute("user", user);
 
-        return "user-info";
+        return "user-update";
+    }
+
+    @PatchMapping("/updateUser")
+    public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return "user-update";
+        }
+        userService.updateUser(user);
+
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/deleteUser")

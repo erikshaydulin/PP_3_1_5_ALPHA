@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New User</title>
+  <style>
+    body {
+      background-color: #222;
+      color: #eee;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #fff;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 0.5em;
+      border: none;
+      background-color: #333;
+      color: #eee;
+      margin-bottom: 1em;
+    }
+
+    button[type="submit"], input[type="button"] {
+      background-color: #333;
+      border: none;
+      padding: 0.5em 1em;
+      color: #eee;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover, input[type="button"]:hover {
+      background-color: #444;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1em;
+    }
+
+    th, td {
+      padding: 0.5em;
+      border: 1px solid #666;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  </style>
+  <a href="/logout">Logout</a>
+</head>
+<body>
+<h1>Добавление пользователя</h1>
+<form action="#" th:action="@{/admin/updateUser}" th:object="${user}" method="POST">
+  <input type="hidden" th:field="*{id}"/>
+  <input type="hidden" name="_method" value="PATCH"/>
+  <label for="name">Имя:</label>
+  <input type="text" id="name" th:field="*{name}" required/>
+  <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  <label for="surname">Фамилия:</label>
+  <input type="text" id="surname" th:field="*{surname}" required/>
+  <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Name Error</div>
+  <label for="department">Департамент:</label>
+  <input type="text" id="department" th:field="*{department}" required/>
+  <label for="salary">З/П:</label>
+  <input type="number" id="salary" th:field="*{salary}" required/>
+  <div style="color:red" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}">Name Error</div>
+  <label for="username">Логин:</label>
+  <input type="text" id="username" th:field="*{username}" required/>
+  <label for="password">Пароль:</label>
+  <input type="password" id="password" th:field="*{password}" required/>
+
+
+  <button type="submit">Добавить</button>
+</form>
+</body>
+</html>
