@@ -1,15 +1,15 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.UserService;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.List;
 
 
 @Controller
@@ -22,8 +22,7 @@ public class MyController {
     @GetMapping()
     public String showAllUsers(Model model) {
 
-        List<User> allUsers = userService.getAllUsers();
-        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("allUsers", userService.allUsers());
 
         return "all-users";
     }
@@ -48,7 +47,7 @@ public class MyController {
     @PatchMapping("/updateInfo")
     public String updateInfo(@RequestParam("userId") Long id, Model model) {
 
-        User user = userService.getUser(id);
+        User user = userService.findUserById(id);
         model.addAttribute("user", user);
 
         return "user-update";
