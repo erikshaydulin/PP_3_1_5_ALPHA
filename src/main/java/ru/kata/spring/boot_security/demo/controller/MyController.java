@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 
 
 @Controller
@@ -18,6 +19,15 @@ public class MyController {
 
     @Autowired
     private UserService userService;
+
+    @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
+    public User userForHeader(Principal principal) {
+        if (principal != null) {
+            String username = principal.getName();
+            return userService.findByUsername(username);
+        }
+        return null;
+    }
 
     @GetMapping()
     public String showAllUsers(Model model) {
