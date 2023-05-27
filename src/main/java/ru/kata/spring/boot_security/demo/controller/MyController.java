@@ -20,11 +20,21 @@ public class MyController {
     @Autowired
     private UserService userService;
 
-    @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
+//    @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
+//    public User userForHeader(Principal principal) {
+//        if (principal != null) {
+//            String username = principal.getName();
+//            return userService.findByUsername(username);
+//        }
+//        return null;
+//    }
+
+    @GetMapping("/api/userForHeader")
+    @ResponseBody
     public User userForHeader(Principal principal) {
         if (principal != null) {
-            String username = principal.getName();
-            return userService.findByUsername(username);
+            String name = principal.getName();
+            return userService.findByUsername(name);
         }
         return null;
     }
