@@ -1,16 +1,20 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import ru.kata.spring.boot_security.demo.model.User;
-
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.validation.Valid;
+import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -20,14 +24,6 @@ public class MyController {
     @Autowired
     private UserService userService;
 
-//    @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
-//    public User userForHeader(Principal principal) {
-//        if (principal != null) {
-//            String username = principal.getName();
-//            return userService.findByUsername(username);
-//        }
-//        return null;
-//    }
 
     @GetMapping("/api/userForHeader")
     @ResponseBody
@@ -39,31 +35,35 @@ public class MyController {
         return null;
     }
 
+    @GetMapping("/api/users")
+    @ResponseBody
+    public List<User> getAllUsers() {
+        return userService.allUsers();
+    }
+
+
     @GetMapping()
     public String showAllUsers(Model model) {
-
         model.addAttribute("allUsers", userService.allUsers());
-
+        model.addAttribute("newUser", new User());
         return "all-users";
     }
 
-    @GetMapping("/addNewUser")
-    public String addNewUser(Model model) {
-
-        model.addAttribute("user", new User());
-
-        return "user-info";
-    }
 
     @PostMapping("/saveUser")
-    public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            return "user-info";
+    public String saveUser(@Valid @ModelAttribute("user") User newUser, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("newUser", newUser);
+            model.addAttribute("bindingResult", bindingResult);
+
+            return "all-users";
         }
-        userService.saveUser(user);
+        userService.saveUser(newUser);
 
         return "redirect:/admin";
     }
+
+
     @PatchMapping("/updateInfo")
     public String updateInfo(@RequestParam("userId") Long id, Model model) {
 
@@ -75,7 +75,7 @@ public class MyController {
 
     @PatchMapping("/updateUser")
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "user-update";
         }
         userService.updateUser(user);
