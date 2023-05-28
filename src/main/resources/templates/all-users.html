@@ -14,10 +14,14 @@
 <nav class="navbar bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
     <span class="navbar-brand mb-0 fs-6">
-      <span id="sessionName"></span>
-      <span id="sessionSurname"></span>
+      <span class="username" th:text="${userForHeader.name}"></span>
+        <span class="surname" th:text="${userForHeader.surname}"></span>
       <span>с ролями:</span>
-      <span id="roles"></span>
+      <span th:each="role, iterStat : ${userForHeader.roles}">
+            <span class="role"
+                  th:text="${role.name == 'ROLE_ADMIN' ? 'ADMIN' : (role.name == 'ROLE_USER' ? 'USER' : '')}"></span>
+            <span th:if="${!iterStat.last}" class="role-separator"></span>
+        </span>
     </span>
         <a class="navbar-brand fs-6 text-secondary" href="/logout">Logout</a>
     </div>
@@ -80,29 +84,38 @@
                         <div class="tab-pane fade" id="newUser-tab-pane" role="tabpanel" aria-labelledby="newUser-tab"
                              tabindex="0">
                             <h4>Create New User</h4>
-                            <form action="#" th:action="@{/admin/saveUser}" class="form" method="POST" th:object="${newUser}">
-                                <label class="label" for="name">Имя:</label>
-                                <input type="text" id="name" th:field="*{name}"/>
-                                <span class="span" th:errors="*{name}"></span>
-                                <br>
-                                <label class="label" for="surname">Фамилия:</label>
-                                <input type="text" id="surname" th:field="*{surname}"/>
-                                <span class="span" th:errors="*{surname}"></span>
-                                <br>
-                                <label class="label" for="department">Департамент:</label>
-                                <input type="text" id="department" th:field="*{department}"/>
-                                <br>
-                                <label class="label" for="salary">З/П:</label>
-                                <input type="number" id="salary" th:field="*{salary}"/>
-                                <span class="span" th:errors="*{salary}"></span>
-                                <br>
-                                <label class="label" for="username">Логин:</label>
-                                <input type="text" id="username" th:field="*{username}"/>
-                                <br>
-                                <label class="label" for="password">Пароль:</label>
-                                <input type="password" id="password" th:field="*{password}"/>
-                                <br>
-                                <button type="submit">Добавить</button>
+                            <form class="col-4" th:method="POST" th:action="@{/admin/saveUser}" th:object="${newUser}">
+                                <div class="form-group text-center">
+                                    <label for="name" class="col-form-label font-weight-bold">Name</label>
+                                    <input th:field="*{name}" type="text" class="form-control" placeholder="name" aria-label="First name" id="name">
+                                    <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                                        <span th:each="error : ${#fields.errors('name')}" th:text="${error}"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="surname" class="col-form-label font-weight-bold">Surname</label>
+                                    <input th:field="*{surname}" type="text" class="form-control" placeholder="surname" aria-label="Last name" id="surname">
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="department" class="col-form-label font-weight-bold">Department</label>
+                                    <input th:field="*{department}" type="text" class="form-control" id="department" aria-describedby="department">
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="salary" class="col-form-label font-weight-bold">Salary</label>
+                                    <input th:field="*{salary}" type="number" class="form-control" id="salary" aria-describedby="salary">
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="username" class="col-form-label font-weight-bold">Username</label>
+                                    <input th:field="*{username}" type="text" class="form-control" id="username" aria-describedby="username">
+                                </div>
+                                <div class="form-group text-center">
+                                    <label for="exampleInputPassword1" class="col-form-label font-weight-bold">Password</label>
+                                    <input th:field="*{password}" type="password" class="form-control" id="exampleInputPassword1">
+                                </div>
+                                <div class="form-group text-center ">
+                                    <button type="submit" class="btn btn-success text-white">ADD NEW USER
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -111,6 +124,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"

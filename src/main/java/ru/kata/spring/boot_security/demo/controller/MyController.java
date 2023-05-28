@@ -1,18 +1,14 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
-import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 import java.util.List;
 
@@ -24,16 +20,24 @@ public class MyController {
     @Autowired
     private UserService userService;
 
-
-    @GetMapping("/api/userForHeader")
-    @ResponseBody
+    @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
     public User userForHeader(Principal principal) {
         if (principal != null) {
-            String name = principal.getName();
-            return userService.findByUsername(name);
+            String username = principal.getName();
+            return userService.findByUsername(username);
         }
         return null;
     }
+
+//    @GetMapping("/api/userForHeader")
+//    @ResponseBody
+//    public User userForHeader(Principal principal) {
+//        if (principal != null) {
+//            String name = principal.getName();
+//            return userService.findByUsername(name);
+//        }
+//        return null;
+//    }
 
     @GetMapping("/api/users")
     @ResponseBody
@@ -51,13 +55,14 @@ public class MyController {
 
 
     @PostMapping("/saveUser")
-    public String saveUser(@Valid @ModelAttribute("user") User newUser, BindingResult bindingResult, Model model) {
+    public String saveUser(@Valid @ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("newUser", newUser);
             model.addAttribute("bindingResult", bindingResult);
 
             return "all-users";
         }
+
         userService.saveUser(newUser);
 
         return "redirect:/admin";

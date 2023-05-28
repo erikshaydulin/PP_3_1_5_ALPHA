@@ -1,5 +1,5 @@
 console.log('JS файл подключен')
-// Получить данные пользователя с помощью Fetch API
+
 // Получить данные пользователя с помощью Fetch API
 function getUserForHeader() {
     fetch('admin/api/userForHeader')
@@ -78,57 +78,45 @@ document.addEventListener('DOMContentLoaded', function() {
     getUsers();
 });
 
-// function createUser() {
-//     const form = document.getElementById('newUserForm');
-//     const name = document.getElementById('name').value;
-//     const surname = document.getElementById('surname').value;
-//     const department = document.getElementById('department').value;
-//     const salary = document.getElementById('salary').value;
-//     const username = document.getElementById('username').value;
-//     const password = document.getElementById('password').value;
+//______________________________________________________________________________________
+
+
+
+// JavaScript-код для управления активной вкладкой - Пока отключил, некорректная работа.
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const activeTab = sessionStorage.getItem("activeTab");
 //
-//     const newUser = {
-//         name: name,
-//         surname: surname,
-//         department: department,
-//         salary: salary,
-//         username: username,
-//         password: password
-//     };
+//     if (activeTab === "newUser") {
+//         document.getElementById("listUsers-tab").classList.remove("active");
+//         document.getElementById("listUsers-tab-pane").classList.remove("active", "show");
 //
-//     fetch('/admin/saveUser', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(newUser)
-//     })
-//         .then(response => {
-//             if (response.ok) {
-//                 // Перезагрузка страницы после успешного сохранения пользователя
-//                 location.reload();
-//             } else {
-//                 throw new Error('Ошибка при сохранении пользователя.');
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Ошибка:', error);
-//         });
-// }
+//         document.getElementById("newUser-tab").classList.add("active");
+//         document.getElementById("newUser-tab-pane").classList.add("active", "show");
+//     } else {
+//         // Проверяем, был ли пользователь успешно создан
+//         const userCreated = sessionStorage.getItem("userCreated");
+//         if (userCreated === "true") {
+//             // Устанавливаем активную вкладку в "User table"
+//             document.getElementById("newUser-tab").classList.remove("active");
+//             document.getElementById("newUser-tab-pane").classList.remove("active", "show");
 //
-// document.addEventListener('DOMContentLoaded', function() {
-//     const form = document.getElementById('newUserForm');
-//     form.addEventListener('submit', function(event) {
-//         event.preventDefault();
-//         createUser();
-//     });
-//
-//     const addButton = document.getElementById('addUserButton');
-//     addButton.addEventListener('click', function() {
-//         createUser();
-//         form.reset();
-//     });
+//             document.getElementById("listUsers-tab").classList.add("active");
+//             document.getElementById("listUsers-tab-pane").classList.add("active", "show");
+//         }
+//     }
 // });
+//
+// document.getElementById("listUsers-tab").addEventListener("click", function() {
+//     sessionStorage.setItem("activeTab", "listUsers");
+// });
+//
+// document.getElementById("newUser-tab").addEventListener("click", function() {
+//     sessionStorage.setItem("activeTab", "newUser");
+// });
+//
+//
+
 
 
 
