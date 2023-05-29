@@ -55,9 +55,8 @@ public class MyController {
             model.addAttribute("newUser", newUser);
             model.addAttribute("bindingResult", bindingResult);
 
-            return "redirect:/admin";
+            return "all-users";
         }
-        List<Role> listRoles = userService.listRoles();
         userService.saveUser(newUser);
 
         return "redirect:/admin";

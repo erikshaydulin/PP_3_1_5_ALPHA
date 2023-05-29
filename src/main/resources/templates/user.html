@@ -37,7 +37,8 @@
                     <div class="menu-container">
                         <nav>
                             <ul class="nav nav-pills flex-column">
-                                <li id="adminMenuItem" class="nav-item rounded d-block">
+                                <li id="adminMenuItem" class="nav-item rounded d-block" th:if="${#lists.contains(user.roles.![name], 'ROLE_ADMIN')}"
+                                    th:class="${#request.getRequestURI().contains('/admin') ? 'nav-item active' : 'nav-item'}">
                                     <a class="nav-link" href="/admin">Admin</a>
                                 </li>
                                 <li id="userMenuItem" class="nav-item rounded d-block">
@@ -102,20 +103,23 @@
         roleCells.forEach(function (cell) {
             let roles = cell.textContent.trim().split(","); // Получаем список ролей из содержимого ячейки
             let cleanedRoles = roles.map(function (role) {
-                return role.trim().replace(/^ROLE_/, ""); // Удаляем префикс "ROLE_" из каждой роли
+                return role.replace("ROLE_", ""); // Удаляем префикс "ROLE_" из каждой роли
             });
-            cell.innerHTML = ""; // Очищаем содержимое ячейки
+            cell.textContent = cleanedRoles.join(", "); // Заменяем содержимое ячейки на очищенные роли
+        });
+    });
+</script>
 
-            cleanedRoles.forEach(function (role, index) {
-                let span = document.createElement("span"); // Создаем элемент span
-                span.textContent = role; // Задаем текстовое содержимое для span
-                cell.appendChild(span); // Добавляем span в ячейку
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const roleCells = document.querySelectorAll(".table tbody td:nth-child(5)"); // Выбираем все ячейки с ролями
 
-                // Добавляем разделитель между ролями, кроме последней роли
-                if (index < cleanedRoles.length - 1) {
-                    cell.appendChild(document.createTextNode(", "));
-                }
+        roleCells.forEach(function (cell) {
+            let roles = cell.textContent.trim().split(","); // Получаем список ролей из содержимого ячейки
+            let cleanedRoles = roles.map(function (role) {
+                return role.replace("ROLE_", ""); // Удаляем префикс "ROLE_" из каждой роли
             });
+            cell.textContent = cleanedRoles.join(", "); // Заменяем содержимое ячейки на очищенные роли
         });
     });
 </script>
