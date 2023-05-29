@@ -96,9 +96,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <button class="update-button btn btn-success" data-id="${user.id}" data-bs-toggle="modal" data-bs-target="#editUserModal">
-                                                    Изменить
-                                                </button>
+                                                <form th:method="PATCH" th:action="@{/admin/updateInfo}"
+                                                      th:url="updateButton">
+                                                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                                                    <input type="submit" class="update-button btn btn-success" value="Изменить"
+                                                           onclick="window.location.href = '${updateButton}'"/>
+                                                </form>
                                             </td>
                                             <td>
                                                 <form th:method="DELETE" th:action="@{/admin/deleteUser}"
