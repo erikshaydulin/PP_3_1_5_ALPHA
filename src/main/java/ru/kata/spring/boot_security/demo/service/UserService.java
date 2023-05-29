@@ -61,22 +61,13 @@ public class UserService implements UserDetailsService {
 
     public boolean updateUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setName(user.getName());
-        user.setSurname(user.getSurname());
-        user.setDepartment(user.getDepartment());
-        user.setSalary(user.getSalary());
-        user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
 
     public boolean deleteUser(Long userId) {
-        if (userRepository.findById(userId).isPresent()) {
-            userRepository.deleteById(userId);
-            return true;
-        }
-        return false;
+        userRepository.deleteById(userId);
+        return true;
     }
 
 
