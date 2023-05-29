@@ -9,7 +9,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
-
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -45,11 +47,11 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles"
             , joinColumns = @JoinColumn(name = "user_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {}
 
-    public User(String name, String surname, String department, int salary, String username, String password, Collection<Role> roles) {
+    public User(String name, String surname, String department, int salary, String username, String password, Set<Role> roles) {
         this.name = name;
         this.surname = surname;
         this.department = department;
@@ -62,7 +64,11 @@ public class User implements UserDetails {
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
-        this.roles = (Collection<Role>) authorities;
+        this.roles = (Set<Role>) authorities;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     public String getUsername() {
@@ -95,7 +101,7 @@ public class User implements UserDetails {
 
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Set<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
@@ -107,11 +113,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -156,6 +162,19 @@ public class User implements UserDetails {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return salary == user.salary && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(department, user.department) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, department, salary, username, password, roles);
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -163,6 +182,9 @@ public class User implements UserDetails {
                 ", surname='" + surname + '\'' +
                 ", department='" + department + '\'' +
                 ", salary=" + salary +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

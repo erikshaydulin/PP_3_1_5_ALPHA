@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/admin/**").hasRole("USER")
                 .antMatchers("/", "/index").permitAll()
                 .anyRequest().authenticated()
                 .and()

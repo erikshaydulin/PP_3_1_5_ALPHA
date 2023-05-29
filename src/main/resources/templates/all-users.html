@@ -67,24 +67,57 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="listUsers-tab-pane" role="tabpanel"
                              aria-labelledby="listUsers-tab" tabindex="0">
-                            <table id="usersTable">
-                                <thead>
-                                <tr>
-                                    <th>Имя</th>
-                                    <th>Фамилия</th>
-                                    <th>Департамент</th>
-                                    <th>З/П</th>
-                                    <th>Операции</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <div class="allUserStyle">
+                                <h5 class="title">All users</h5>
+                            </div>
+                            <div class="table-containerT">
+                                <div class="table-wrapper">
+                                    <table class="tableD">
+                                        <thead>
+                                        <tr>
+                                            <th>Имя</th>
+                                            <th>Фамилия</th>
+                                            <th>Департамент</th>
+                                            <th>З/П</th>
+                                            <th>Роли</th>
+                                            <th>Изменить</th>
+                                            <th>Удалить</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${allUsers}">
+                                            <td th:text="${user.name}"></td>
+                                            <td th:text="${user.surname}"></td>
+                                            <td th:text="${user.department}"></td>
+                                            <td th:text="${user.salary}"></td>
+                                            <td>
+                                                <div th:each="role : ${user.roles}">
+                                                    <p th:text="${role.name.toString()}"></p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="update-button btn btn-success" data-id="${user.id}" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                                                    Изменить
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <form th:method="DELETE" th:action="@{/admin/deleteUser}"
+                                                      th:url="deleteButton">
+                                                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                                                    <input type="submit" class="delete-button" value="Удалить"
+                                                           onclick="window.location.href = '${deleteButton}'"/>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="newUser-tab-pane" role="tabpanel" aria-labelledby="newUser-tab"
                              tabindex="0">
                             <h4>Create New User</h4>
-                            <form class="col-4" th:method="POST" th:action="@{/admin/saveUser}" th:object="${newUser}">
+                            <form class="col-4" id="newUserForm" th:method="POST" th:action="@{/admin/saveUser}" th:object="${newUser}">
                                 <div class="form-group text-center">
                                     <label for="name" class="col-form-label font-weight-bold">Name</label>
                                     <input th:field="*{name}" type="text" class="form-control" placeholder="name" aria-label="First name" id="name">
@@ -95,6 +128,9 @@
                                 <div class="form-group text-center">
                                     <label for="surname" class="col-form-label font-weight-bold">Surname</label>
                                     <input th:field="*{surname}" type="text" class="form-control" placeholder="surname" aria-label="Last name" id="surname">
+                                    <div th:if="${#fields.hasErrors('surname')}" class="text-danger">
+                                        <span th:each="error : ${#fields.errors('surname')}" th:text="${error}"></span>
+                                    </div>
                                 </div>
                                 <div class="form-group text-center">
                                     <label for="department" class="col-form-label font-weight-bold">Department</label>
@@ -103,6 +139,9 @@
                                 <div class="form-group text-center">
                                     <label for="salary" class="col-form-label font-weight-bold">Salary</label>
                                     <input th:field="*{salary}" type="number" class="form-control" id="salary" aria-describedby="salary">
+                                    <div th:if="${#fields.hasErrors('salary')}" class="text-danger">
+                                        <span th:each="error : ${#fields.errors('salary')}" th:text="${error}"></span>
+                                    </div>
                                 </div>
                                 <div class="form-group text-center">
                                     <label for="username" class="col-form-label font-weight-bold">Username</label>
@@ -112,6 +151,17 @@
                                     <label for="exampleInputPassword1" class="col-form-label font-weight-bold">Password</label>
                                     <input th:field="*{password}" type="password" class="form-control" id="exampleInputPassword1">
                                 </div>
+                                <div class="form-group text-center ">
+                                    <label class="col-form-label font-weight-bold" for="roles">Role</label>
+                                    <select th:field="*{roles}" class="form-select" multiple size="2" aria-label="Default select example" id="roles">
+                                        <option th:each="role : ${listRoles}"
+                                                th:field="*{roles}"
+                                                th:value="${role.id}"
+                                                th:text="${role.name}">
+                                        </option>
+                                    </select>
+                                </div>
+
                                 <div class="form-group text-center ">
                                     <button type="submit" class="btn btn-success text-white">ADD NEW USER
                                     </button>
