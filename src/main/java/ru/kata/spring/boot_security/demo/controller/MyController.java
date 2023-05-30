@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -19,8 +18,12 @@ import java.util.List;
 @RequestMapping("/admin")
 public class MyController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public MyController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ModelAttribute("userForHeader") // Добавляем атрибут userForHeader в модель для каждого запроса
     public User userForHeader(Principal principal) {
