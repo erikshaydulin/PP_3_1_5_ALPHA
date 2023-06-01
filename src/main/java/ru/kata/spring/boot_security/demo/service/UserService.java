@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
-        return userFromDb.orElse(new User());
+        return userFromDb.orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

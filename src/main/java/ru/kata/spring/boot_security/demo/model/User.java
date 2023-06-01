@@ -39,10 +39,16 @@ public class User implements UserDetails {
     @Min(value = 0, message = "Зарплата должна быть не меньше 0")
     @Column(name = "salary")
     private int salary;
-    @Column(unique = true)
+
+    @Size(min = 2, message = "Логин должен содержать минимум 2 символа.")
+    @Pattern(regexp = "^[a-zA-Zа-яА-Я]+$", message = "Логин не должен содержать цифры, пробелы, спецсимволы")
+    @Column(unique = true, name = "username")
     private String username;
 
+    @Size(min = 2, message = "Пароль должен содержать минимум 2 символа.")
+    @Column(name = "password")
     private String password;
+
     @ManyToMany
     @JoinTable(name = "users_roles"
             , joinColumns = @JoinColumn(name = "user_id")
