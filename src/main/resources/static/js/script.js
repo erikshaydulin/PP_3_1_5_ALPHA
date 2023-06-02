@@ -1,4 +1,5 @@
 
+
 function delPrefix() {
     const roleCells = document.querySelectorAll(".table tbody td:nth-child(6)"); // Выбираем все ячейки с ролями
 
