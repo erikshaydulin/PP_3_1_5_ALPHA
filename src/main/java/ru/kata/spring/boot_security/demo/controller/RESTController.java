@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.util.UserErrorResponse;
 import ru.kata.spring.boot_security.demo.util.UserNotCreatedException;
@@ -15,6 +17,7 @@ import ru.kata.spring.boot_security.demo.util.UserNotUpdatedException;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -32,6 +35,7 @@ public class RESTController {
     public List<User> getAllUsers() {
         return userService.allUsers();
     }
+
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long id) {
