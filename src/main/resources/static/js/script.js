@@ -43,16 +43,16 @@ const renderTable = (users) => {
     outputUser.forEach(user => {
         tableContent += `
             <tr>
-                <th><p>${user.id}</p></th>
-                <th><p>${user.name}</p></th>
-                <th><p>${user.surname}</p></th>
-                <th><p>${user.department}</p></th>
-                <th><p>${user.salary}</p></th>
-                <th><p>${user.username}</p></th>
-                <th><p>${user.password}</p></th>
-                <th><p>${user.roles}</p></th>
+                <td><span>${user.id}</span></td>
+                <td><span>${user.name}</span></td>
+                <td><span>${user.surname}</span></td>
+                <td><span>${user.department}</span></td>
+                <td><span>${user.salary}</span></td>
+                <td><span>${user.username}</span></td>
+                <td><span>${user.password}</span></td>
+                <td><span>${user.roles}</span></td>
                 <th>
-                    <button data-id="${user.id}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" id="editbtn">Edit</button>
+                    <button data-id="${user.id}" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal" id="editbtn">Edit</button>
                 </th>
                 <th>
                     <button data-id="${user.id}" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="delbtn">Delete</button>
@@ -69,65 +69,8 @@ $.get(URL, function(data) {
 });
 
 
-// добавляем пользователя
-let userFormNew = $("#newUserForm");
 
-userFormNew.submit(function(e) {
-    e.preventDefault();
-
-
-
-    const roles = [];
-    $('#roles option:selected').each(function() {
-        roles.push({
-            id: $(this).val(),
-            name: $(this).text()
-        });
-    });
-
-    const user = {
-        name: $(".name_input").val(),
-        surname: $(".surname_input").val(),
-        department: $(".department_input").val(),
-        salary: $(".salary_input").val(),
-        username: $(".username_input").val(),
-        password: $(".password_input").val(),
-        roles: roles
-    };
-
-    $.ajax({
-        url: URL,
-        type: 'POST',
-        data: JSON.stringify(user),
-        contentType: 'application/json',
-        success: function(data) {
-            $('#listUsers-tab').tab('show');
-            userFormNew[0].reset();
-            $.get(URL, function(data) {
-                renderTable(data);
-            });
-        },
-    });
-});
-
-
-// заполнение форм delete и edit
-userTable.on('click', '#delbtn', function() {
-    let userId = $(this).data('id');
-    $.get(`${URL}/${userId}`, function(data) {
-        let roles = '';
-        data.roles.forEach(role => roles += role.name + " ");
-        $("#idDelete").val(data.id);
-        $("#nameDelete").val(data.name);
-        $("#surnameDelete").val(data.surname);
-        $("#departmentDelete").val(data.department);
-        $("#salaryDelete").val(data.salary);
-        $("#usernameDelete").val(data.username);
-        $("#passwordDel").val(data.password);
-        $("#rolesDelete").val(roles);
-    });
-});
-
+// Заполнение форм Edit и Delete
 userTable.on('click', '#editbtn', function() {
     let userId = $(this).data('id');
     $.get(`${URL}/${userId}`, function(data) {
@@ -152,32 +95,35 @@ userTable.on('click', '#editbtn', function() {
     });
 });
 
-// удаление пользователя
-let modalFormDelete = $('#deleteModalForm');
-
-modalFormDelete.submit(function(e) {
-    e.preventDefault();
-    let userId = $("#idDelete").val();
-
-    $.ajax({
-        url: `${URL}/${userId}`,
-        type: 'DELETE',
-        success: function() {
-            $('#deleteModal').modal('hide');
-            outputUser = '';
-            $.get(URL, function(data) {
-                renderTable(data);
-            });
-        }
+userTable.on('click', '#delbtn', function() {
+    let userId = $(this).data('id');
+    $.get(`${URL}/${userId}`, function(data) {
+        let roles = '';
+        data.roles.forEach(role => roles += role.name + " ");
+        $("#idDelete").val(data.id);
+        $("#nameDelete").val(data.name);
+        $("#surnameDelete").val(data.surname);
+        $("#departmentDelete").val(data.department);
+        $("#salaryDelete").val(data.salary);
+        $("#usernameDelete").val(data.username);
+        $("#passwordDel").val(data.password);
+        $("#rolesDelete").val(roles);
     });
 });
 
-// изменение пользователя
+
+// Изменение юзера
 let modalFormEdit = $('#editModalForm');
 let roleEdit = $('#rolesEdit');
 
 modalFormEdit.submit(function(e) {
     e.preventDefault();
+
+    $('#nameEditError').text('');
+    $('#surnameEditError').text('');
+    $('#salaryEditError').text('');
+    $('#usernameEditError').text('');
+    $('#passwordEditError').text('');
 
     const rol = [];
     $('#rolesEdit option:selected').each(function() {
@@ -209,9 +155,98 @@ modalFormEdit.submit(function(e) {
             $.get(URL, function(data) {
                 renderTable(data);
             });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // обработка ошибки
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                const errors = jqXHR.responseJSON.message.split(';');
+                errors.forEach(error => {
+                    const [field, message] = error.split(' - ');
+                    $(`#${field}EditError`).text(message); // обновляем текст ошибки
+                });
+            }
         }
     });
 });
 
 
+
+
+// Удаление юзера
+let modalFormDelete = $('#deleteModalForm');
+
+modalFormDelete.submit(function(e) {
+    e.preventDefault();
+    let userId = $("#idDelete").val();
+
+    $.ajax({
+        url: `${URL}/${userId}`,
+        type: 'DELETE',
+        success: function() {
+            $('#deleteModal').modal('hide');
+            outputUser = '';
+            $.get(URL, function(data) {
+                renderTable(data);
+            });
+        }
+    });
+});
+
+
+
+// Добавление юзера
+
+let userFormNew = $("#newUserForm");
+
+userFormNew.submit(function(e) {
+    e.preventDefault();
+
+    $('#nameEditError').text('');
+    $('#surnameEditError').text('');
+    $('#salaryEditError').text('');
+    $('#usernameEditError').text('');
+    $('#passwordEditError').text('');
+
+    const roles = [];
+    $('#roles option:selected').each(function() {
+        roles.push({
+            id: $(this).val(),
+            name: $(this).text()
+        });
+    });
+
+    const user = {
+        name: $(".name_input").val(),
+        surname: $(".surname_input").val(),
+        department: $(".department_input").val(),
+        salary: $(".salary_input").val(),
+        username: $(".username_input").val(),
+        password: $(".password_input").val(),
+        roles: roles
+    };
+
+    $.ajax({
+        url: URL,
+        type: 'POST',
+        data: JSON.stringify(user),
+        contentType: 'application/json',
+        success: function(data) {
+            $('#listUsers-tab').tab('show');
+            userFormNew[0].reset();
+            $.get(URL, function(data) {
+                renderTable(data);
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // обработка ошибки
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                const errors = jqXHR.responseJSON.message.split(';');
+                errors.forEach(error => {
+                    const [field, message] = error.split(' - ');
+                    $(`#${field}Error`).text(message); // обновляем текст ошибки
+                });
+            }
+        }
+    });
+});
 

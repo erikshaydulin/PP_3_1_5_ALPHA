@@ -110,6 +110,7 @@
                                                 <input type="text" class="form-control  name_input"
                                                        placeholder="имя"
                                                        aria-label="First name" id="name">
+                                                <div class="error" id="nameError"></div>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label for="surname"
@@ -117,6 +118,7 @@
                                                 <input type="text" class="form-control  surname_input"
                                                        placeholder="фамилия"
                                                        aria-label="Last name" id="surname">
+                                                <div class="error" id="surnameError"></div>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label for="department"
@@ -132,6 +134,7 @@
                                                 <input type="number" class="form-control salary_input"
                                                        id="salary"
                                                        aria-describedby="salary">
+                                                <div class="error" id="salaryError"></div>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label for="username"
@@ -139,12 +142,14 @@
                                                 <input type="text" class="form-control username_input"
                                                        id="username"
                                                        aria-describedby="username">
+                                                <div class="error" id="usernameError"></div>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label for="exampleInputPassword1"
                                                        class="col-form-label font-weight-bold">Password</label>
                                                 <input type="password" class="form-control password_input"
                                                        id="exampleInputPassword1">
+                                                <div class="error" id="passwordError"></div>
                                             </div>
                                             <div class="form-group text-center">
                                                 <label class="col-form-label font-weight-bold"
@@ -197,11 +202,13 @@
                             <input type="text"
                                    class="form-control" id="nameEdit"
                                    required/>
+                            <div class="error" id="nameEditError"></div>
                             <br>
                             <label for="surnameEdit"><b>Surname</b></label>
                             <input type="text"
                                    class="form-control" id="surnameEdit"
                                    required/>
+                            <div class="error" id="surnameEditError"></div>
                             <br>
                             <label for="departmentEdit"><b>Department</b></label>
                             <input type="text"
@@ -212,17 +219,20 @@
                             <input type="number"
                                    class="form-control"
                                    id="salaryEdit"/>
+                            <div class="error" id="salaryEditError"></div>
                             <br>
                             <label for="usernameEdit"><b>Username</b></label>
                             <input type="text"
                                    class="form-control"
                                    id="usernameEdit"
                                    required/>
+                            <div class="error" id="usernameEditError"></div>
                             <br>
                             <label for="pass"><b>Password</b></label>
                             <input type="password"
                                    class="form-control"
                                    id="pass"/>
+                            <div class="error" id="passwordEditError"></div>
                             <br>
                             <label for="rolesEdit"><b>Role</b></label>
                             <select class="form-control" id="rolesEdit"
