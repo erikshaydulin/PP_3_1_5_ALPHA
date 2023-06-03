@@ -13,8 +13,10 @@ import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -77,8 +79,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public List<Role> listRoles() {
-        return roleRepository.findAll();
+    public Set<Role> listRoles() {
+        List<Role> list = roleRepository.findAll();
+        return new HashSet<>(list);
     }
 
     @Transactional(readOnly = true)

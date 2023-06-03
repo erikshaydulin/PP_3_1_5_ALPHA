@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,10 +35,9 @@ public class MyController {
     }
 
 
-    @GetMapping("/api/users")
-    @ResponseBody
-    public List<User> getAllUsers() {
-        return userService.allUsers();
+    @GetMapping()
+    public String showAllUsers(Model model) {
+        return "all-users";
     }
 
 

@@ -36,6 +36,12 @@ public class RESTController {
         return userService.allUsers();
     }
 
+    @GetMapping("/roles")
+    public ResponseEntity<Set<Role>> getAllRoles() {
+        Set<Role> roleList = userService.listRoles();
+        return ResponseEntity.ok(roleList);
+    }
+
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") Long id) {
