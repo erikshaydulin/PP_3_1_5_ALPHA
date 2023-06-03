@@ -1,6 +1,8 @@
 let URL = "http://localhost:8080/api/admin";
 const roleUrl = 'http://localhost:8080/api/admin/roles';
 
+
+
 // получаем роли с сервера
 const selectRoleForm = $('#roles');
 
@@ -17,10 +19,29 @@ let userTable = $("#tableAllUsers");
 let outputUser = [];
 
 const renderTable = (users) => {
+    outputUser = []; // Очистка массива перед обновлением таблицы
     users.forEach(user => {
         let roleLet = "";
-        user.roles.forEach((role) => roleLet += role.name + " || ");
-        outputUser += `
+        user.roles.forEach((role) => {
+            // Удаляем префикс "ROLE_" из имени роли
+            let roleName = role.name.replace("ROLE_", "");
+            roleLet += roleName + "    ";
+        });
+        outputUser.push({ // Добавляем объект пользователя в массив
+            id: user.id,
+            name: user.name,
+            surname: user.surname,
+            department: user.department,
+            salary: user.salary,
+            username: user.username,
+            password: user.password,
+            roles: roleLet.slice(0, roleLet.length - 3)
+        });
+    });
+
+    let tableContent = ''; // Создаем пустую строку
+    outputUser.forEach(user => {
+        tableContent += `
             <tr>
                 <th><p>${user.id}</p></th>
                 <th><p>${user.name}</p></th>
@@ -29,7 +50,7 @@ const renderTable = (users) => {
                 <th><p>${user.salary}</p></th>
                 <th><p>${user.username}</p></th>
                 <th><p>${user.password}</p></th>
-                <th><p>${roleLet.slice(0, roleLet.length - 3)}</p></th>
+                <th><p>${user.roles}</p></th>
                 <th>
                     <button data-id="${user.id}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" id="editbtn">Edit</button>
                 </th>
@@ -39,18 +60,22 @@ const renderTable = (users) => {
             </tr>
         `;
     });
-    userTable.html(outputUser);
+
+    userTable.html(tableContent); // Устанавливаем строку с содержимым таблицы
 };
 
 $.get(URL, function(data) {
     renderTable(data);
 });
 
+
 // добавляем пользователя
 let userFormNew = $("#newUserForm");
 
 userFormNew.submit(function(e) {
     e.preventDefault();
+
+
 
     const roles = [];
     $('#roles option:selected').each(function() {
@@ -76,16 +101,15 @@ userFormNew.submit(function(e) {
         data: JSON.stringify(user),
         contentType: 'application/json',
         success: function(data) {
-            renderTable([data]);
+            $('#listUsers-tab').tab('show');
             userFormNew[0].reset();
-            $('#listUsers-tab-pane').tab('show');
-            let activateTab = document.getElementById('listUsers-tab');
-            activateTab.classList.add('active');
-            let deactivateTab = document.getElementById('newUser-tab');
-            deactivateTab.classList.remove('active');
-        }
+            $.get(URL, function(data) {
+                renderTable(data);
+            });
+        },
     });
 });
+
 
 // заполнение форм delete и edit
 userTable.on('click', '#delbtn', function() {
@@ -170,7 +194,7 @@ modalFormEdit.submit(function(e) {
         department: $("#departmentEdit").val(),
         salary: $("#salaryEdit").val(),
         username: $("#usernameEdit").val(),
-        password: $(".password_input").val(),
+        password: $("#pass").val(),
         roles: rol
     };
 
@@ -189,8 +213,5 @@ modalFormEdit.submit(function(e) {
     });
 });
 
-// Переключение на первую вкладку (home-tab)
-let activateTab = document.getElementById('listUsers-tab');
-activateTab.classList.add('active');
-let deactivateTab = document.getElementById('newUser-tab');
-deactivateTab.classList.remove('active');
+
+
