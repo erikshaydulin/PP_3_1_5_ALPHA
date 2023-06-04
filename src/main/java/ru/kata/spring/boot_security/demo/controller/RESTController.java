@@ -8,7 +8,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.util.UserErrorResponse;
 import ru.kata.spring.boot_security.demo.util.UserNotCreatedException;
@@ -30,7 +29,7 @@ public class RESTController {
         this.userService = userService;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @GetMapping()
     public List<User> getAllUsers() {
         return userService.allUsers();
@@ -88,7 +87,6 @@ public class RESTController {
         userService.deleteUser(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
 
 
     ////////////////////////////////////////////////////////////- ИСКЛЮЧЕНИЯ -//////////////////////////////////////////////////////////////////
