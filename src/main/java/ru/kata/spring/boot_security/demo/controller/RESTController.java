@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 public class RESTController {
 
     private final UserService userService;
@@ -29,10 +29,12 @@ public class RESTController {
         this.userService = userService;
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @GetMapping()
-    public List<User> getAllUsers() {
-        return userService.allUsers();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+
+        return new ResponseEntity<>(userService.allUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/roles")
@@ -42,12 +44,12 @@ public class RESTController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public User getUser(@PathVariable("id") Long id) {
         return userService.findUserById(id);
     }
 
-    @PostMapping()
+    @PostMapping("/users")
     public ResponseEntity<HttpStatus> addUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -65,7 +67,7 @@ public class RESTController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping()
+    @PatchMapping("/users")
     public ResponseEntity<HttpStatus> editUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -82,7 +84,7 @@ public class RESTController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok(HttpStatus.OK);

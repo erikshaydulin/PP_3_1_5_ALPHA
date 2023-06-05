@@ -1,5 +1,66 @@
-let URL = "http://localhost:8080/api/admin";
-const roleUrl = 'http://localhost:8080/api/admin/roles';
+let URL = "http://localhost:8080/admin/users";
+const roleUrl = 'http://localhost:8080/admin/roles';
+const authUserUrl = 'http://localhost:8080/currentUser'
+
+$(document).ready(function() {
+    $.ajax({
+        url: authUserUrl,
+        type: 'GET',
+        success: function(user) {
+            $('.username').text(user.name);
+            $('.surname').text(user.surname);
+            let roles = user.roles.map(function (role) {
+                return role.name === 'ROLE_ADMIN' ? 'ADMIN' : 'USER';
+            });
+            $('.role').text(roles.join(' '));
+        },
+        error: function() {
+            console.log('Error getting current user');
+        }
+    });
+});
+
+$(document).ready(function() {
+    $.ajax({
+        url: authUserUrl,
+        type: 'GET',
+        success: function(user) {
+            $('.id').text(user.id);
+            $('.name').text(user.name);
+            $('.surname').text(user.surname);
+            $('.department').text(user.department);
+            let roles = user.roles.map(function(role) {
+                return role.name === 'ROLE_ADMIN' ? 'ADMIN' : 'USER';
+            });
+            $('.roles').text(roles.join(', '));
+        },
+        error: function() {
+            console.log('Error getting current user');
+        }
+    });
+});
+
+$(document).ready(function() {
+    $.ajax({
+        url: authUserUrl,
+        type: 'GET',
+        success: function(user) {
+            let isAdmin = user.roles.some(function(role) {
+                return role.name === 'ROLE_ADMIN';
+            });
+            console.log(isAdmin); // отладочный вывод
+            if (isAdmin) {
+                $('#adminMenuItem').show();
+            } else {
+                $('#adminMenuItem').hide();
+            }
+        },
+        error: function() {
+            console.log('Error getting current user');
+        }
+    });
+});
+
 
 
 
